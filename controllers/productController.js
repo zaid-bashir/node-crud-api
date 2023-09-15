@@ -1,21 +1,24 @@
-const asyncHandler = require('express-async-handler')
+const asyncHandler = require("express-async-handler");
 const Product = require("../models/productModel");
-
 
 const getProducts = async (req, res) => {
   try {
     const products = await Product.find({}, { __v: 0 });
+    if (!products) {
+      console.log("No Products Found \n" + products);
+      res.status(404).json({ message: "No Products Found", data: null });
+    }
     console.log("Product Fetched Successfully \n" + products);
     res
       .status(200)
       .json({ message: "Product Fetched Successfully", data: products });
   } catch (error) {
     console.log(error.message);
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message, data: null });
   }
 };
 
-const getProductById = asyncHandler (async (req, res) => {
+const getProductById = asyncHandler(async (req, res) => {
   try {
     if (req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
       const product = await Product.findById(
@@ -24,7 +27,7 @@ const getProductById = asyncHandler (async (req, res) => {
       );
       if (!product) {
         console.log("Product Not Found.");
-        res.status(404).json({ message: "Product Not Found" });
+        res.status(404).json({ message: "Product Not Found", data: null });
         return;
       }
       console.log("Product Fetched Successfully \n" + product);
@@ -33,11 +36,11 @@ const getProductById = asyncHandler (async (req, res) => {
         .json({ message: "Product Fetched Successfully", data: product });
     } else {
       console.log("Product Id Not Valid.\n");
-      res.status(404).json({ message: "Product Id Not Valid" });
+      res.status(404).json({ message: "Product Id Not Valid", data: null });
     }
   } catch (error) {
     console.log(error.message);
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message, data: null });
   }
 });
 
@@ -47,10 +50,9 @@ const deleteProductById = async (req, res) => {
       const product = await Product.deleteOne({ _id: req.params.id });
       console.log("HELLO....");
       console.log(product);
-
       if (product.deletedCount == 0) {
         console.log("Product Not Found.\n" + product);
-        res.status(404).json({ message: "Product Not Found" });
+        res.status(404).json({ message: "Product Not Found", data: null });
         return;
       }
       console.log("Product Deleted Successfully \n" + product);
@@ -60,11 +62,11 @@ const deleteProductById = async (req, res) => {
       });
     } else {
       console.log("Product Id Not Valid.\n");
-      res.status(404).json({ message: "Product Id Not Valid" });
+      res.status(404).json({ message: "Product Id Not Valid", data: null });
     }
   } catch (error) {
     console.log(error.message);
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message, data: null });
   }
 };
 
@@ -74,7 +76,7 @@ const updateProductById = async (req, res) => {
       const product = await Product.findByIdAndUpdate(req.params.id, req.body);
       if (!product) {
         console.log("Product Not Found.\n" + req.body);
-        res.status(404).json({ message: "Product Not Found" });
+        res.status(404).json({ message: "Product Not Found", data: null });
         return;
       }
       console.log("Product Updated Successfully \n" + req.body);
@@ -83,11 +85,11 @@ const updateProductById = async (req, res) => {
         .json({ message: "Product Updated Successfully", data: req.body });
     } else {
       console.log("Product Id Not Valid.\n");
-      res.status(404).json({ message: "Product Id Not Valid" });
+      res.status(404).json({ message: "Product Id Not Valid", data: null });
     }
   } catch (error) {
     console.log(error.message);
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message, data: null });
   }
 };
 
@@ -100,11 +102,9 @@ const addProduct = async (req, res) => {
       .json({ message: "Product Added Successfully", data: product });
   } catch (error) {
     console.log(error.message);
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message, data: null });
   }
 };
-
-
 
 module.exports = {
   getProducts,
