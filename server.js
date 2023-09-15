@@ -38,6 +38,7 @@ mongoose.set("strictQuery", true);
 app.use('/api',productRoute);
 
 app.get("/api" ,(req, res) => {
+  console.log(__dirname+"/public/index.html");
   res.sendFile(__dirname+"/public/index.html");
 });
 
@@ -51,12 +52,11 @@ mongoose
   .then(() => {
     //Before Listening To App Server,First Connect To Database
     console.log("Connected To MongoDB");
-    console.log(__dirname+"/public/index.html");
     db = mongoose.connection.db;
     //Step 3: Start Listening to App
     app.listen(3000, () => {
       // await db.createCollection("users")
-      console.log("App Started on : http://127.0.0.1:"+port+"/api");
+      console.log("App Started on : https://node-crud-api-v1-0-0.onrender.com/api");
     });
   })
   .catch((error) => {
