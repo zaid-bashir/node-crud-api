@@ -1,4 +1,6 @@
+const asyncHandler = require('express-async-handler')
 const Product = require("../models/productModel");
+
 
 const getProducts = async (req, res) => {
   try {
@@ -13,7 +15,7 @@ const getProducts = async (req, res) => {
   }
 };
 
-const getProductById = async (req, res) => {
+const getProductById = asyncHandler (async (req, res) => {
   try {
     if (req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
       const product = await Product.findById(
@@ -37,7 +39,7 @@ const getProductById = async (req, res) => {
     console.log(error.message);
     res.status(500).json({ message: error.message });
   }
-};
+});
 
 const deleteProductById = async (req, res) => {
   try {
@@ -101,6 +103,8 @@ const addProduct = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+
 
 module.exports = {
   getProducts,

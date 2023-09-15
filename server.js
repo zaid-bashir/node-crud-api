@@ -1,8 +1,15 @@
 // Step 1: Create an Express instance Varaible and Mongoose Instance Variable
+
 const express = require("express");
 const mongoose = require("mongoose");
+const cors = require('cors')
+require('dotenv').config()
+console.log(process.env) 
 const errorMiddleWare = require("./middlewares/errorMiddleware")
 const productRoute = require("./routes/productRoute")
+
+const mongodburl = process.env.MONGODB_URL;
+const port = process.env.PORT
 
 //Step 2: Assign the express() to a Varaible app
 const app = express();
@@ -10,6 +17,14 @@ const app = express();
 //DB Instance
 var db = null;
 
+//CORS FOR ONLY SOMEDOMAINS
+// var corsOptions = {
+//   origin: 'http://example.com',
+//   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+// }
+
+//CORS POLICY
+app.use(cors())
 
 //To Understand the JSON by App
 app.use(express.json());
@@ -22,14 +37,16 @@ mongoose.set("strictQuery", true);
 //Step 4: Creating Different Routes to Access Data Over Web
 app.use('/api',productRoute);
 
-app.get("/api", (req, res) => {
+app.get("/api" ,(req, res) => {
   res.send("<center><h1>Welcome To Our Shop App By Coding Rockers</h1></center>");
 });
+
+app.use(errorMiddleWare)
 
 //Connecting MongoDB Atlas Connection String with Node JS App
 mongoose
   .connect(
-    "mongodb+srv://admin:Zaid123@cluster0codingrockers.peefac9.mongodb.net/nodecrudapi?retryWrites=true&w=majority"
+    mongodburl
   )
   .then(() => {
     //Before Listening To App Server,First Connect To Database
@@ -38,7 +55,7 @@ mongoose
     //Step 3: Start Listening to App
     app.listen(3000, () => {
       // await db.createCollection("users")
-      console.log("App Started on : http://127.0.0.1:3000");
+      console.log("App Started on : http://127.0.0.1:"+port+"/api");
     });
   })
   .catch((error) => {
