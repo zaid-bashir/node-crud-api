@@ -38,7 +38,7 @@ mongoose.set("strictQuery", true);
 app.use('/api',productRoute);
 
 app.get("/api" ,(req, res) => {
-  res.send("<center><h1>Welcome To Our Shop App By Coding Rockers</h1></center>");
+  res.sendFile(__dirname+"/public/index.html");
 });
 
 app.use(errorMiddleWare)
@@ -51,6 +51,7 @@ mongoose
   .then(() => {
     //Before Listening To App Server,First Connect To Database
     console.log("Connected To MongoDB");
+    console.log(__dirname+"/public/index.html");
     db = mongoose.connection.db;
     //Step 3: Start Listening to App
     app.listen(3000, () => {
